@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
@@ -12,7 +13,7 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.goeswhere.dmnp.util.FileUtils;
+import org.apache.commons.io.FileUtils;
 
 public class VorbGraph {
 
@@ -37,7 +38,12 @@ public class VorbGraph {
 		if (f.isDirectory()) {
 			System.err.print("Building list..");
 			int sub = 0;
-			for (final File j : FileUtils.filesIn(f.getAbsolutePath(), "ogg")) {
+			for (final File j : new Iterable<File>() {
+				@SuppressWarnings("unchecked")
+				@Override public Iterator<File> iterator() {
+					return FileUtils.iterateFiles(f, new String[] { "ogg" }, true);
+				}
+			}) {
 				ecs.submit(new Callable<Result>() {
 					@Override public Result call() throws Exception {
 						Result ret = new Result();
@@ -128,7 +134,7 @@ public class VorbGraph {
 			}
 		}
 		final double avg = total / samples;
-		return (max - avg)/avg;
+		return (max - avg) / avg;
 	}
 
 	private static int b2i(byte b) {
