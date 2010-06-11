@@ -1,3 +1,5 @@
+package com.goeswhere.vorbgraph;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,7 +14,7 @@ import java.util.concurrent.Executors;
 
 import com.goeswhere.dmnp.util.FileUtils;
 
-public class Main {
+public class VorbGraph {
 
 	static class Result {
 		double diff;
